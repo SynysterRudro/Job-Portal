@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaGoogle } from "react-icons/fa";
+import { AuthContext } from '../../contexts/AuthProvider';
+import { GoogleAuthProvider } from 'firebase/auth';
 
 const Login = () => {
+
+    const googleProvider = new GoogleAuthProvider();
+
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();
+    const { provideLogin, emailPasswordLogIn } = useContext(AuthContext);
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -12,17 +19,43 @@ const Login = () => {
         const password = form.passoword.value;
 
         console.log(email, password);
+        handleEmailPasswordLogin(email, password);
 
 
     }
+
+    const handleEmailPasswordLogin = (email, password) => {
+        emailPasswordLogIn(email, password)
+            .then(result => {
+                const user = result.user;
+                console.log(user);
+                navigate('/');
+            })
+            .catch(error => setMessage(error.message))
+    }
+
+
+    const handleGoogleSignin = () => {
+        provideLogin(googleProvider)
+            .then(result => {
+                const user = result.user;
+                console.log(user);
+                navigate('/');
+            })
+            .catch(error => console.message(error))
+    }
+
+
+
+
     return (
         <div>
             <div className="hero min-h-screen bg-base-200">
                 <div className="hero-content flex-col lg:flex-row-reverse">
                     <div className="text-center lg:text-left">
                         <h1 className="text-5xl font-bold">Login now!</h1>
-                        <p className="py-6">Please Login to our website in order to enjoy our total service.
-                            <FaGoogle className='text-3xl hover:text-red-500 mt-5'></FaGoogle>
+                        <p className="py-6">Please Login to our website in order to enjoy our total service. <br />
+                            <button onClick={handleGoogleSignin}>  <FaGoogle className='text-3xl hover:text-red-500 mt-5'></FaGoogle></button>
                         </p>
                     </div>
                     <form onSubmit={handleSubmit} className="self-stretch space-y-3 ng-untouched ng-pristine ng-valid">
@@ -38,7 +71,7 @@ const Login = () => {
 
                         <button type="submit" className="w-full py-2 font-semibold rounded dark:bg-violet-400 hover:bg-violet-300 dark:text-gray-900">Sign In</button>
                         <p>Need an account?<Link to='/register' className='text-blue-800 underline'>Register</Link> instead </p>
-                        <p>{message}</p>
+                        <p className='text-red-500'> {message}</p>
                     </form>
                 </div>
             </div>

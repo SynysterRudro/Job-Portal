@@ -1,11 +1,18 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider';
 
 const Header = () => {
+    const { user, logOut } = useContext(AuthContext);
+    const navigate = useNavigate();
 
-
-
+    const handleLogout = () => {
+        logOut()
+            .then(() => {
+                navigate('/');
+            })
+            .catch(error => (error))
+    }
     return (
         <div>
             <div className="navbar bg-base-100">
@@ -30,7 +37,12 @@ const Header = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <Link to='/login' className="btn">Login</Link>
+
+                    {user?.uid ? <button onClick={handleLogout} className="btn">Logout</button> :
+                        <Link to='/login' className="btn">Login</Link>
+                    }
+
+
                 </div>
             </div>
         </div>
