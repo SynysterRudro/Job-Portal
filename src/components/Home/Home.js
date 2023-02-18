@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import ExperiencedJobs from '../ExperiencedJobs/ExperiencedJobs';
+import FresherJob from '../FresherJob/FresherJob';
+import TopIts from '../TopITs/TopIts';
 
 const Home = () => {
     const [status, setStatus] = useState(false);
@@ -28,6 +31,10 @@ const Home = () => {
                 </div>
             </div>
 
+
+            <FresherJob className='my-4'></FresherJob>
+            <ExperiencedJobs className='my-4'></ExperiencedJobs>
+            <TopIts className='my-4'></TopIts>
 
 
 
